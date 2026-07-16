@@ -51,7 +51,7 @@
         }
         .neirong {
           flex-direction: column;
-          overflow: auto; /* 窄屏时恢复整体滚动，因为此时左右叠放 */
+          overflow: auto; 
         }
         .youqu {
           margin-left: 8px;
@@ -74,7 +74,7 @@
         "
         class="flex"
       >
-        <img src="裁剪的圆形图片.png" width="60" height="60" />
+        <img src="soly.png" width="60" height="60" />
         <div style="margin-left: 10px">CpQ</div>
       </div>
       <div class="flex1">
@@ -110,15 +110,15 @@
               padding: 0 4px 4px 8px;
             "
           >
-            <!-- 数据块 —— 放在滚动容器顶部，随滚动上下移动 -->
+            <!--数据块-->
             <div class="flex" style="flex-shrink: 0">
               <div style="height: 100px" class="flex1 baise mgr8 shadow"></div>
               <div style="height: 100px" class="flex1 baise mgr8 shadow"></div>
               <div style="height: 100px" class="flex1 baise shadow"></div>
             </div>
-            <!-- 正文区 —— 放在数据块下方，两者同属一个滚动容器 -->
+            <!--正文区-->
             <div style="min-height: 500px" class="baise mgt8 shadow">
-              <!-- 占位文字，让正文区够长以便测试滚动 -->
+              <!--占位文字-->
               <div style="padding: 20px">
                 <p style="line-height: 1.8">
                   这里是正文内容。稍后我会添加点击上方数据块以及点击左侧导航栏跳转对应内容的联动。
