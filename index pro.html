@@ -1,0 +1,402 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>心碎人俱乐部 · CpQ</title>
+    <style>
+      :root {
+        --bg-page: #f5f0eb;
+        --bg-card: #ffffff;
+        --bg-sidebar: #faf7f4;
+        --text-primary: #2c2c2c;
+        --text-secondary: #8c8c8c;
+        --text-muted: #bbb0a8;
+        --border-light: #ece4dc;
+        --border-hover: #d5cdc5;
+        --accent: #c4897a;
+        --accent-hover: #b07465;
+        --accent-bg: #f5eae6;
+        --accent-subtle: #fdf6f3;
+        --radius-sm: 8px;
+        --radius: 12px;
+        --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+        --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 2px 8px rgba(0,0,0,0.06);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; height: 100vh;
+        background-color: var(--bg-page);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+        color: var(--text-primary);
+        -webkit-font-smoothing: antialiased;
+      }
+      .flex    { display: flex; }
+      .column  { flex-direction: column; }
+      .baise   { background-color: var(--bg-card); }
+      .flex1   { flex: 1; }
+      .mg8     { margin: 8px; }
+      .mgr8    { margin-right: 8px; }
+      .mgt8    { margin-top: 8px; }
+      .shadow {
+        box-shadow: var(--shadow);
+        border-radius: var(--radius);
+      }
+
+      /* ── 侧栏 ── */
+      .cebian {
+        background-color: var(--bg-sidebar);
+        border-right: 1px solid var(--border-light);
+      }
+      .avatar-area {
+        padding: 20px 16px; display: flex; align-items: center; gap: 12px;
+        border-bottom: 1px solid var(--border-light);
+      }
+      .avatar-area img {
+        width: 48px; height: 48px; border-radius: 50%; object-fit: cover;
+        box-shadow: 0 0 0 2px var(--accent-subtle);
+      }
+      .avatar-area .name {
+        font-weight: 600; font-size: 15px; letter-spacing: 0.5px;
+      }
+      .daohang {
+        padding: 12px 20px; color: var(--text-secondary); font-size: 14px;
+        cursor: default; border-bottom: 1px solid var(--border-light);
+        transition: background 0.2s, color 0.2s;
+      }
+      .daohang:hover { background: var(--accent-subtle); color: var(--accent); }
+
+      /* ── 头部 ── */
+      .header {
+        height: 56px; flex-shrink: 0; background: var(--bg-card);
+        border-bottom: 1px solid var(--border-light);
+        display: flex; align-items: center; padding: 0 20px; gap: 8px;
+      }
+      .header h1 { margin: 0; font-size: 16px; font-weight: 500; letter-spacing: 1px; }
+      .header .tagline { font-size: 12px; color: var(--text-muted); margin-left: auto; }
+
+      /* ── 内容区 ── */
+      .neirong { overflow: hidden; }
+      .data-card {
+        background: var(--bg-card); border-radius: var(--radius); height: 90px;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        transition: box-shadow 0.25s, transform 0.2s; cursor: default;
+      }
+      .data-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.08); transform: translateY(-2px); }
+      .data-card .icon   { font-size: 20px; margin-bottom: 4px; opacity: 0.7; }
+      .data-card .value  { font-size: 15px; font-weight: 600; color: var(--accent); }
+      .data-card .label  { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+      .content-area {
+        background: var(--bg-card); border-radius: var(--radius);
+        padding: 24px; line-height: 1.8; font-size: 14px;
+      }
+      .bottom-bar {
+        height: 28px; flex-shrink: 0; border-top: 1px solid var(--border-light);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 11px; color: var(--text-muted); letter-spacing: 0.3px;
+      }
+
+      /* ── 右区域 ── */
+      .club-card {
+        background: var(--bg-card); border-radius: var(--radius); height: 150px;
+        flex-shrink: 0; display: flex; flex-direction: column; align-items: center;
+        justify-content: center; text-align: center; padding: 16px;
+        position: relative; overflow: hidden;
+      }
+      .club-card::before {
+        content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+        background: linear-gradient(90deg, transparent 20%, var(--accent) 50%, transparent 80%);
+        opacity: 0.4;
+      }
+      .club-card .club-name { font-size: 14px; font-weight: 600; letter-spacing: 1px; }
+      .club-card .club-desc { font-size: 12px; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
+      .club-card .club-join {
+        margin-top: 10px; font-size: 12px; color: var(--accent); text-decoration: none;
+        padding: 4px 14px; border: 1px solid var(--accent-bg); border-radius: 20px;
+        transition: background 0.2s, color 0.2s;
+      }
+      .club-card .club-join:hover { background: var(--accent); color: #fff; }
+
+      /* ── 留言区 ── */
+      .guestbook {
+        background: var(--bg-card); border-radius: var(--radius); flex: 1; margin-top: 8px;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        text-align: center; padding: 24px 20px; position: relative; overflow: hidden;
+      }
+      .guestbook::after {
+        content: ""; position: absolute; bottom: 12px; left: 20%; right: 20%;
+        height: 1px; background: var(--border-light);
+      }
+      .guestbook-icon   { font-size: 28px; margin-bottom: 8px; opacity: 0.75; }
+      .guestbook-title  { font-size: 15px; font-weight: 600; letter-spacing: 1px; margin-bottom: 6px; }
+      .guestbook-desc   { font-size: 12px; color: var(--text-secondary); line-height: 1.6; max-width: 200px; margin-bottom: 16px; }
+      .guestbook-btn {
+        display: inline-block; padding: 10px 28px; background: var(--accent); color: #fff;
+        font-size: 14px; font-weight: 500; text-decoration: none; border-radius: 30px;
+        letter-spacing: 0.8px; transition: background 0.25s, box-shadow 0.25s, transform 0.2s;
+        box-shadow: 0 2px 6px rgba(196,137,122,0.25);
+      }
+      .guestbook-btn:hover { background: var(--accent-hover); box-shadow: 0 4px 12px rgba(196,137,122,0.35); transform: translateY(-1px); }
+      .guestbook-hint { margin-top: 10px; font-size: 11px; color: var(--text-muted); }
+
+      /* =================================================================
+         ★★★ 浮游菜单按钮 ★★★
+         可拖拽 + 点击切换侧栏
+         ================================================================ */
+      .menu-toggle {
+        display: none;                     /* 桌面端隐藏 */
+        position: fixed;
+        left: 14px; top: 14px;
+        width: 42px; height: 42px;
+        border-radius: 50%;
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        cursor: grab;                      /* 拖拽光标提示 */
+        z-index: 200;
+        font-size: 20px;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+        touch-action: none;                /* 禁止浏览器默认触摸行为（缩放/滚动） */
+        will-change: left, top;            /* 提示浏览器优化 left/top 动画性能 */
+        user-select: none;                 /* 防止拖拽时选中文字 */
+        -webkit-user-select: none;
+      }
+      /* 正在被拖拽时：去掉 transition 避免拖拽卡顿，光标变抓握态 */
+      .menu-toggle.dragging {
+        transition: none !important;
+        cursor: grabbing;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+      }
+      .menu-toggle:active:not(.dragging) { transform: scale(0.92); }
+
+      /* ── 侧栏遮罩 ── */
+      .sidebar-overlay {
+        display: none; position: fixed; inset: 0;
+        background: rgba(0,0,0,0.2); z-index: 80;
+        opacity: 0; transition: opacity 0.3s;
+      }
+      .sidebar-overlay.active { display: block; opacity: 1; }
+
+      /* =================================================================
+         移动端适配
+         ================================================================ */
+      @media (max-width: 768px) {
+        .menu-toggle { display: flex; }
+        .cebian {
+          position: fixed !important; left: -230px; top: 0; bottom: 0;
+          width: 220px !important; z-index: 150 !important;
+          transition: left 0.3s ease;
+          box-shadow: 2px 0 16px rgba(0,0,0,0.1); border-right: none;
+        }
+        .cebian.open { left: 0; }
+        .neirong { flex-direction: column; overflow: auto; }
+        .col-main { flex: none !important; width: auto; }
+        .youqu   { flex: none !important; width: auto; min-height: 360px; margin-left: 8px; }
+        .data-card { height: 76px; }
+        .data-card .value { font-size: 13px; }
+      }
+      @media (max-width: 480px) {
+        .header h1 { font-size: 14px; }
+        .header .tagline { display: none; }
+        .mg8  { margin: 4px; }
+        .mgr8 { margin-right: 4px; }
+        .mgt8 { margin-top: 4px; }
+      }
+    </style>
+  </head>
+  <body class="flex">
+
+    <!-- ★★★ 可拖拽的浮游菜单按钮 ★★★ -->
+    <button class="menu-toggle" id="menuToggle" aria-label="切换菜单">☰</button>
+
+    <!-- ★★★ 侧栏遮罩 ★★★ -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ── 侧栏 ── -->
+    <div style="width: 200px; flex-shrink: 0; z-index: 2" class="cebian" id="sidebar">
+      <div class="avatar-area">
+        <img src="soly.png" alt="avatar" />
+        <span class="name">CpQ</span>
+      </div>
+      <div class="flex1">
+        <div class="daohang">群友卡片</div>
+        <div class="daohang">话题记录</div>
+        <div class="daohang">群数据</div>
+        <div class="daohang">关于</div>
+        <div class="daohang">更多</div>
+      </div>
+    </div>
+
+    <!-- ── 主区域 ── -->
+    <div class="flex1 flex column" style="overflow: hidden">
+      <div class="header shadow" style="border-radius: 0; box-shadow: 0 1px 2px rgba(0,0,0,0.04);">
+        <h1>♡ 心碎人群聚集地</h1>
+        <span class="tagline">一群有意思的人 · 在聊有意思的事</span>
+      </div>
+
+      <div class="neirong flex1 flex" style="min-height: 0;">
+        <div style="flex: 3; display: flex; flex-direction: column; min-height: 0;" class="mg8 col-main">
+          <div style="flex: 1; overflow-y: auto; min-height: 0; padding: 0 4px 4px 8px;">
+            <div class="flex" style="flex-shrink: 0; gap: 8px;">
+              <div class="flex1 data-card shadow">
+                <span class="icon">👥</span>
+                <span class="value">"所谓群英荟萃…"</span>
+                <span class="label">群活跃成员卡片（待完成）</span>
+              </div>
+              <div class="flex1 data-card shadow">
+                <span class="icon">📝</span>
+                <span class="value">没想好</span>
+                <span class="label">不知道</span>
+              </div>
+              <div class="flex1 data-card shadow">
+                <span class="icon">💬</span>
+                <span class="value">煤想好</span>
+                <span class="label">卜知道</span>
+              </div>
+            </div>
+            <div class="content-area mgt8 shadow">
+              <p style="margin: 0;">
+                这里用来展示卡片、话题或群数据的详细内容。之后会添加点击上方数据块以及点击左侧导航栏跳转对应内容的联动。
+              </p>
+            </div>
+          </div>
+          <div class="bottom-bar mgt8 shadow" style="border-radius: var(--radius-sm);">
+            <span>心碎人俱乐部 · 成立于 2025</span>
+          </div>
+        </div>
+
+        <div style="flex: 1; display: flex; flex-direction: column; min-height: 0;" class="youqu mgr8 mgt8">
+          <div class="club-card shadow">
+            <div class="club-name">♡ 心碎人俱乐部</div>
+            <div class="club-desc">
+              群友的小角落<br />
+              写写卡片 · 唠唠日常
+            </div>
+            <a class="club-join" href="#">待设置</a>
+          </div>
+          <div class="guestbook shadow">
+            <div class="guestbook-icon">✉</div>
+            <div class="guestbook-title">群友留言板</div>
+            <div class="guestbook-desc">
+              感谢每一位点进来看的人<br />
+              你想说的话所有话，都会传到我这里
+            </div>
+            <a class="guestbook-btn"
+               href="https://docs.qq.com/form/page/DWmZXak5tTWZuSGdD"
+               target="_blank" rel="noopener">
+              点击留言 →
+            </a>
+            <div class="guestbook-hint">留言仅我可见 · 通过腾讯文档收集</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================
+         JavaScript —— 可拖拽浮游按钮 + 侧栏开关
+         鼠标拖拽 / 手指拖拽 → 按钮跟随移动
+         点击（无拖拽）→ 切换侧栏
+         点击遮罩 → 关闭侧栏
+         ================================================================ -->
+    <script>
+      var btn     = document.querySelector('.menu-toggle');
+      var sidebar = document.querySelector('.cebian');
+      var overlay = document.querySelector('.sidebar-overlay');
+
+      var isDragging = false;
+      var dragStartX, dragStartY, origLeft, origTop;
+      var DRAG_THRESHOLD = 8;  // 移动超过 8px 才算拖拽
+
+      // ---- 拖拽核心逻辑（鼠标/触摸共用） ----
+
+      function onDragStart(clientX, clientY) {
+        isDragging    = false;
+        dragStartX    = clientX;
+        dragStartY    = clientY;
+        origLeft      = parseFloat(btn.style.left) || 14;  // 读取当前位置
+        origTop       = parseFloat(btn.style.top)  || 14;
+        btn.classList.add('dragging');   // 加 .dragging → 去掉 transition
+      }
+
+      function onDragMove(clientX, clientY) {
+        // 两个 start 之一被触发后才响应 move，否则是无效 move 事件
+        if (dragStartX === undefined || dragStartY === undefined) return;
+
+        var dx = clientX - dragStartX;
+        var dy = clientY - dragStartY;
+
+        if (Math.abs(dx) > DRAG_THRESHOLD || Math.abs(dy) > DRAG_THRESHOLD) {
+          isDragging = true;  // 超过阈值，标记为"拖拽"而非"点击"
+        }
+
+        // 不管是否超过阈值，只要已经开始跟了，就让按钮跟随手指/鼠标
+        btn.style.left = clamp(origLeft + dx, 6, window.innerWidth  - 48) + 'px';
+        btn.style.top  = clamp(origTop  + dy, 6, window.innerHeight - 48) + 'px';
+      }
+
+      function onDragEnd() {
+        dragStartX = undefined;
+        dragStartY = undefined;
+        btn.classList.remove('dragging');
+        // isDragging 保留给 click 事件判断，稍后 click 里会读取并重置
+      }
+
+      function clamp(val, min, max) {
+        return Math.max(min, Math.min(max, val));
+      }
+
+      // ---- 鼠标事件 ----
+      btn.addEventListener('mousedown', function(e) {
+        e.preventDefault();           // 防止选中页面文字
+        onDragStart(e.clientX, e.clientY);
+      });
+      document.addEventListener('mousemove', function(e) {
+        if (dragStartX === undefined) return;  // 没按下则不处理
+        onDragMove(e.clientX, e.clientY);
+      });
+      document.addEventListener('mouseup', function() {
+        if (dragStartX === undefined) return;
+        onDragEnd();
+      });
+
+      // ---- 触摸事件 ----
+      btn.addEventListener('touchstart', function(e) {
+        var t = e.touches[0];
+        onDragStart(t.clientX, t.clientY);
+      }, { passive: true });
+
+      document.addEventListener('touchmove', function(e) {
+        if (dragStartX === undefined) return;
+        var t = e.touches[0];
+        onDragMove(t.clientX, t.clientY);
+      }, { passive: true });
+
+      document.addEventListener('touchend', function() {
+        if (dragStartX === undefined) return;
+        onDragEnd();
+      });
+
+      // ---- 点击切换侧栏（如果是拖拽则不切换） ----
+      btn.addEventListener('click', function() {
+        if (isDragging) {
+          isDragging = false;         // 拖拽产生的 click，忽略
+          return;
+        }
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('active');
+        btn.classList.toggle('open');   // 按钮本身也有 .open 状态
+      });
+
+      // ---- 点击遮罩 -> 关闭侧栏 ----
+      overlay.addEventListener('click', function() {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
+        btn.classList.remove('open');
+      });
+    </script>
+  </body>
+</html>
